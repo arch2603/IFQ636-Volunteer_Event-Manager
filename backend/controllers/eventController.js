@@ -33,13 +33,13 @@ const validateEventData = (data) => {
         return { error: 'Date must use YYYY-MM-DD' };
     }
 
-    const eventDate = new Date(`${date}T00:00:00:00Z`);
+    const eventDate = new Date(`${date}T00:00:00.000Z`);
     if (Number.isNaN(eventDate.getTime()) || eventDate.toISOString().slice(0, 10) !== date) {
         return { error: 'Invalid event date' };
     }
 
     // AC4: Time format + ordering (string compare is safe because HH:mm is zero-padded)
-    if (!typeof startTime !== 'string' || typeof finishTime !== 'string' || !TIME_PATTERN.test(startTime) || !TIME_PATTERN.test(finishTime)) {
+    if (typeof startTime !== 'string' || typeof finishTime !== 'string' || !TIME_PATTERN.test(startTime) || !TIME_PATTERN.test(finishTime)) {
         return { error: 'Start and finish times must use HH:MM format' };
     }
 
@@ -48,13 +48,15 @@ const validateEventData = (data) => {
     }
 
     return {
-        title: data.title.trim(),
-        location: data.location.trim(),
-        purpose: data.purpose.trim(),
-        date: eventDate,
-        startTime,
-        finishTime,
-        maxVolunteers
+        data: {
+            title: data.title.trim(),
+            location: data.location.trim(),
+            purpose: data.purpose.trim(),
+            date: eventDate,
+            startTime,
+            finishTime,
+            maxVolunteers
+        }
     }
 }
 
