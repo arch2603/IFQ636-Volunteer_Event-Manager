@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const eventSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
-    date: { type: Date, required: true, required: true },
+    date: { type: Date, required: true },
     location: { type: String, required: true, trim: true },
     purpose: { type: String, required: true, trim: true },
     startTime: { type: String, required: true },
