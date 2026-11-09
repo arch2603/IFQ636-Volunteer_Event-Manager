@@ -61,9 +61,6 @@ const validateEventData = (data) => {
 }
 
 const createEvent = async (req, res) => {
-    if (!req.user?._id || req.user.role !== 'organiser') {
-        return res.status(401).json({ message: 'Not authorised' });
-    }
 
     const { error, data } = validateEventData(req.body);
     //return validation eerors
