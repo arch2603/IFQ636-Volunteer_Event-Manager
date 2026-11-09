@@ -13,7 +13,7 @@ const eventSchema = new mongoose.Schema({
         validator: Number.isInteger,
         message: 'Maximum volunteers muct be a whole number'
     }},
-    organisers: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true , immutable: true},
+    organiser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true , immutable: true},
 
 }, { timestamps: true });
 
