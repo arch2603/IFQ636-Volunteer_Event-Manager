@@ -1,19 +1,19 @@
 import { NavLink } from 'react-router-dom'
 
 const links = [
-  { to: '/events', label: 'My events' },
-  { to: '/create-event', label: 'Create event' }
+  { to: '/events', label: 'My Events' },
+  { to: '/create-event', label: 'Create Event' }
 ]
 
 const Sidebar = () => (
-  <nav className='flex flex-col bg-gray-800 text-white w-64 min-h-screen p-4 '>
-    <div className='relative top-12 flex flex-col gap-16'>
+  <nav className='flex flex-col bg-gray-800 text-white w-48 shrink-0 p-4 '>
+    <div className='mt-6 flex flex-col items-center gap-12'>
       {links.map(({ to, label }) => (
         <NavLink
           key={to}
           to={to}
           className={({ isActive }) =>
-            `block bg-blue-600 text-white text-center font-semibold py-4 hover:bg-blue-700 ${
+            `block w-36 bg-blue-600 py-3 text-sm text-white text-center font-semibold py-4 hover:bg-blue-700 ${
               isActive ? 'ring-2 ring-white ' : ''
             }`
           }

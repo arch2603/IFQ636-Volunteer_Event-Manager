@@ -11,11 +11,11 @@ const Navbar = () => {
   }
 
   return (
-    <nav className='bg-gray-800 text-white text-center py-5'>
-      <Link to='/' className='text-2xl font-bold'>
-        Your apps name
+    <nav className='relative bg-gray-800 text-white text-center py-8'>
+      <Link to='/' className='text-3xl font-light'>
+        Volunteer Event Manager
       </Link>
-      <div>
+      <div className='absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-4 text-sm'>
         {user?.role === 'organiser' && (
         <Link
           to='/create-event'
