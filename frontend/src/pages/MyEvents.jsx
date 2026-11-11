@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axiosInstance from '../axiosConfig'
 import { useAuth } from '../context/AuthContext'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 
 const formatDate = isoDate =>
@@ -27,6 +27,22 @@ const MyEvents = () => {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [message, setMessage] = useState(location.state?.message || '')
+
+  useEffect(() => {
+    if (location.state?.message) {
+      navigate(location.pathname, { replace: true, state: null })
+    }
+  }, [location, navigate])
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(''), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [message])
 
   useEffect(() => {
     if (user?.role !== 'organiser') return // If user not an organiser, do not fetch events
@@ -132,6 +148,18 @@ const MyEvents = () => {
           <h2 className='mb-6 bg-white py-3 text-center text-xl font-bold'>
             My Events
           </h2>
+          {message && (
+            <div className='bg-green-100 text-green-800 p-2 mb-4 rounded flex justify-between' role='status'>
+              <span>{message}</span>
+              <button
+                onClick={() => setMessage('')}
+                aria-label='Dismiss message'
+              >
+                {' '}
+                X{' '}
+              </button>
+            </div>
+          )}
           {renderContent()}
         </section>
       </main>

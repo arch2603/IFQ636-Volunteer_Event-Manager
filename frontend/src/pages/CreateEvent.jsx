@@ -49,7 +49,7 @@ const CreateEvent = () => {
         { headers: { Authorization: `Bearer ${user.token}` } }
       )
       setFormData(initForm)
-      navigate(`/events/`)
+      navigate(`/events/`, {state: {message: 'Event created successfully'}})
     } catch (err) {
       setError(
         err.response?.data?.message ||
