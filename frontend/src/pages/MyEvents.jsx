@@ -3,24 +3,9 @@ import axiosInstance from '../axiosConfig'
 import { useAuth } from '../context/AuthContext'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
+import MessageBox from '../components/MessageBox'
+import { formatDate } from '../utils/formatDate'
 
-const formatDate = isoDate =>
-  new Date(isoDate).toLocaleDateString('en-AU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    timeZone: 'Australia/Brisbane'
-  })
-const MessageBox = ({ children, role }) => (
-  <div
-    role={role}
-    className='flex min-h-[18rem] items-center justify-center border-2 border-sky-500  bg-gray-100 p-6 text-center'
-  >
-    <p className='text-2xl font-semibold leading-snug text-slate-700'>
-      {children}
-    </p>
-  </div>
-)
 
 const MyEvents = () => {
   const { user } = useAuth()
