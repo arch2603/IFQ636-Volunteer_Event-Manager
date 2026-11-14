@@ -16,13 +16,21 @@ const Navbar = () => {
         Volunteer Event Manager
       </Link>
       <div className='absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-4 text-sm'>
+        {user?.role === 'volunteer' && (
+          <Link
+            to='/browse-events'
+            className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-700 mr-4'
+          >
+            Browse Events
+          </Link>
+        )}
         {user?.role === 'organiser' && (
-        <Link
-          to='/create-event'
-          className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-700 mr-4'
-        >
-          Create Event
-        </Link>
+          <Link
+            to='/create-event'
+            className='bg-blue-500 px-4 py-2 rounded hover:bg-blue-700 mr-4'
+          >
+            Create Event
+          </Link>
         )}
 
         {user?.role === 'volunteer' && (

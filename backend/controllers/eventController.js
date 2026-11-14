@@ -1,3 +1,4 @@
+const { default: mongoose } = require('mongoose');
 const Event = require('../models/Event');
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
@@ -89,4 +90,31 @@ const getMyEvents = async (req, res) => {
     }
 }
 
-module.exports = { createEvent, validateEventData, getMyEvents };
+const getEvents = async (req, res) => {
+    try {
+        const events = await Event.find().sort({ date: 1, startTime: 1 }).lean();
+        return res.status(200).json({ events: events.map((event) => placesAvailable(event)) });
+    } catch (error) {
+        res.status(500).json({ "message": "Could not load your events" });
+    }
+}
+
+const getEventById = async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) return res.status(404).json({ message: 'Event not found' });
+        const event = await Event.findById(req.params.id).lean();
+        if (!event) return res.status(404).json({ message: 'Event not found' });
+        return res.status(200).json({ event: placesAvailable(event) });
+    } catch (error) {
+        res.status(500).json({ "message": "Could not load event", error: error.message });
+
+    }
+}
+
+const placesAvailable = (event, regCount = 0) => ({
+    ...event,
+    availablePlaces: Math.max(event.maxVolunteers - regCount, 0)
+});
+
+
+module.exports = { createEvent, validateEventData, getMyEvents, getEvents, getEventById };
