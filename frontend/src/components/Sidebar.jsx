@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 const links = [
   { to: '/events', label: 'My Events', roles: ['organiser'] },
   { to: '/create-event', label: 'Create Event', roles: ['organiser'] },
-  { to: '/browse-events', label: 'Events', roles: ['volunteer'] }
+  { to: '/browse-events', label: 'Events', roles: ['volunteer', 'organiser'] }
 ]
 
 const Sidebar = () => {
