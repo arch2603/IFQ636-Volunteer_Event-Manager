@@ -16,6 +16,8 @@ const EventDetails = () => {
   const navigate = useNavigate()
   const [message, setMessage] = useState(location.state?.message || '')
   const { eventid } = useParams()
+  const [registering, setRegistering] = useState(false)
+  const [messageType, setMessageType] = useState('')
 
   useEffect(() => {
     if (location.state?.message) {
@@ -50,6 +52,33 @@ const EventDetails = () => {
     fetchEvents()
   }, [eventid, user])
 
+  const handleRegistration = async () => {
+    setRegistering(true)
+    setMessage('')
+    try {
+      const response = await axiosInstance.post(
+        `/api/events/${eventid}/register`,
+        {},
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      )
+      setEvent(response.data.event)
+      setMessage(response.data.message)
+      setMessageType('success')
+    } catch (error) {
+      if (error.response?.status === 401) {
+        setMessage('Please sign in to register for this event')
+      } else {
+        setMessage(
+          error.response?.data?.message ||
+            'Registration failed. Please try again.'
+        )
+      }
+      setMessageType('error')
+    } finally {
+      setRegistering(false)
+    }
+  }
+
   if (!user)
     return (
       <p role='alert' className='p-6'>
@@ -77,11 +106,35 @@ const EventDetails = () => {
       <div className='bg-white p-4 min-h-[18rem]'>
         {event.availablePlaces === 0 && (
           <p
-            role='status'
+            role='alert'
             className='mb-4 bg-amber-100 p-2 text-decoration-color: var(--color-orange-300)'
           >
             This is event is full. No places available
           </p>
+        )}
+        {message && messageType === 'success' && (
+          <div
+            className='bg-green-100 text-green-800 p-2 mb-4 rounded flex justify-between'
+            role='status'
+          >
+            <span>{message}</span>
+            <button onClick={() => setMessage('')} aria-label='Dismiss message'>
+              {' '}
+              X{' '}
+            </button>
+          </div>
+        )}
+        {message && messageType === 'error' && (
+          <div
+            className='bg-red-100 text-red-800 p-2 mb-4 rounded flex justify-between'
+            role='alert'
+          >
+            <span>{message}</span>
+            <button onClick={() => setMessage('')} aria-label='Dismiss message'>
+              {' '}
+              X{' '}
+            </button>
+          </div>
         )}
         <dl className='grid grid-cols-1 gap-y-1 text-sm sm:grid-cols-[10rem_1fr] sm:gap-y-3'>
           {details.map(([label, value]) => (
@@ -91,7 +144,16 @@ const EventDetails = () => {
             </div>
           ))}
         </dl>
-        <div className='mt-4 flex justify-end'>
+        <div className='mt-4 flex justify-end gap-4'>
+          {user.role === 'volunteer' && (
+            <button
+              onClick={handleRegistration}
+              className='font-semibold px-6 py-2 bg-blue-600 text-white text-sm px-3 py-2 hover:bg-blue-700 disabled:opacity-50'
+              disabled={registering}
+            >
+              {registering ? 'Registering...' : 'Register'}
+            </button>
+          )}
           <Link
             to='/browse-events'
             className='font-semibold px-6 py-2 bg-blue-600 text-white text-sm px-3 py-2 hover:bg-blue-700'
