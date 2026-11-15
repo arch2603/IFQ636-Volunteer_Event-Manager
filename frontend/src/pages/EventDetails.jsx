@@ -107,7 +107,7 @@ const EventDetails = () => {
         {event.availablePlaces === 0 && (
           <p
             role='alert'
-            className='mb-4 bg-amber-100 p-2 text-decoration-color: var(--color-orange-300)'
+            className='mb-4 text-amber-800 p-2 text-decoration-color: var(--color-orange-300)'
           >
             This is event is full. No places available
           </p>
