@@ -103,13 +103,11 @@ const createEvent = async (req, res) => {
 const getMyEvents = async (req, res) => {
   try {
     const events = await Event.find({ organiser: req.user._id }).lean()
-    return res
-      .status(200)
-      .json({
-        events: events.map(event =>
-          placesAvailable(event, event.registeredCount ?? 0)
-        )
-      })
+    return res.status(200).json({
+      events: events.map(event =>
+        placesAvailable(event, event.registeredCount ?? 0)
+      )
+    })
   } catch (error) {
     res.status(500).json({ message: 'Could not load your events' })
   }
@@ -202,11 +200,49 @@ const registerForEvent = async (req, res) => {
   }
 }
 
+const getMyEventRegistrations = async (req, res) => {
+  try {
+    const eventId = req.params.id
+    const userId = req.user._id
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      return res.status(404).json({ message: 'Event not found' })
+    }
+
+    const organiserEvent = await Event.findById(eventId).lean();
+    if(!organiserEvent) {
+      return res.status(404).json({ message: 'Event not found' })
+    }
+
+    //AC3: Organiser owns the event
+    if(organiserEvent.organiser.toString() !== userId.toString()) {
+      return res.status(403).json({message: 'Access denied. You can only view registrations for your own events'})
+    }
+
+    const registrations = await Registration.find({event: eventId})
+    .populate('volunteer', 'name email')
+    .sort({createdAt: 1})
+    .lean()
+
+    return res.status(200).json({
+      event: placesAvailable(organiserEvent, organiserEvent.registeredCount?? 0),
+      totalRegistrations: registrations.length,
+      registrations: registrations.map(r => ({
+        name: r.volunteer?.name,
+        email: r.volunteer?.email,
+        registeredAt: r.createdAt
+      }))
+    })
+  } catch (error) {
+    return res.status(500).json({message: 'Could not load registrations'})
+  }
+}
+
 module.exports = {
   createEvent,
   validateEventData,
   getMyEvents,
   getEvents,
   getEventById,
-  registerForEvent
+  registerForEvent,
+  getMyEventRegistrations
 }
