@@ -215,7 +215,7 @@ const getMyEventRegistrations = async (req, res) => {
 
     //AC3: Organiser owns the event
     if(organiserEvent.organiser.toString() !== userId.toString()) {
-      return res.status(403).json({message: 'Access denied. You can only view your registrations for own events.'})
+      return res.status(403).json({message: 'Access denied. You can only view registrations for your own events'})
     }
 
     const registrations = await Registration.find({event: eventId})
