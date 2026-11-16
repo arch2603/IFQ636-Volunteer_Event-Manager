@@ -8,6 +8,7 @@ import CreateEvent from './pages/CreateEvent';
 import MyEvents from './pages/MyEvents';
 import BrowseEvents from './pages/BrowseEvents'
 import EventDetails from './pages/EventDetails';
+import EventRegistrations from './pages/EventRegistrations'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/events" element={<MyEvents />} />
         <Route path="/browse-events" element={<BrowseEvents />} />
         <Route path="/event-details/:eventid" element={<EventDetails />} />
+         <Route path="/events/:eventid/registrations" element={<EventRegistrations />} />
       </Routes>
     </Router>
   );
